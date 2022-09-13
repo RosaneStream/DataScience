@@ -1,0 +1,4 @@
+Rafael, 10, 4, 8, 7 
+Pedro, 10, 4, 8, 5 
+Cristina, 10, 4, 8, 4 
+Maria, 9, 4, 8, 4
