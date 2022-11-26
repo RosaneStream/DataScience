@@ -13,7 +13,7 @@ setup(
     description="Image processing using scikit",
     long_description=page_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/RosaneStream/DataScience/image-processing-master"
+    url="https://github.com/RosaneStream/DataScience/tree/main/image-processing-master"
     packages=find_packages(),
     install_requires=requirements,
     python_requires='>=3.5',
