@@ -1,0 +1,22 @@
+{% extends "model-page.html" %}
+
+<!-- This is the content part of the schedule-->
+{% block content %}
+    <h2>Schedule</h2>
+    <a href="event">
+        <button type="button"> New Event</button>
+    </a>
+    <ul style="font-size: 18px">
+        <!-- python code -->
+        {% for event in events %}
+        <li>
+                <div %if event.get_late_event % style="color:red">
+                    {{ event.title }} - {{ event.get_input_initial_date }}
+                    ( <a href="event/?id={{ event.id }}">Edit</a>
+                    / <a href="event/delete/{{ event.id }}">Delete</a> )
+                </div>
+            </li>
+
+        {% endfor %}
+    </ul>
+{% endblock %}
