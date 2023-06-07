@@ -1,2 +1,2 @@
 # DataScience
-Activities, challenges and projects related to Data Science
+Activities, challenges and projects related to Python and Data Science
