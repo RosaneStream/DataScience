@@ -17,73 +17,16 @@ For a real estate business, this schema will allow you to track which agents sol
 
 ---
 
-## 2. **Star Schema Diagram**
+## 2. **Step-by-Step Design of the Real Estate Star Schema**
 
-```mermaid
-erDiagram
-    AGENT_DIM {
-        INTEGER agent_id PK
-        VARCHAR agent_name
-        VARCHAR agency_name
-        VARCHAR contact_info
-        VARCHAR region
-    }
-    
-    PROPERTY_DIM {
-        INTEGER property_id PK
-        VARCHAR property_type
-        INT property_size
-        VARCHAR city
-        VARCHAR state
-        VARCHAR zip_code
-        REAL price
-    }
-    
-    BUYER_DIM {
-        INTEGER buyer_id PK
-        VARCHAR buyer_name
-        VARCHAR contact_info
-        REAL buyer_income
-        VARCHAR preferred_region
-    }
-    
-    DATE_DIM {
-        INTEGER date_id PK
-        DATE sale_date
-        VARCHAR day_of_week
-        VARCHAR month
-        INT year
-        INT quarter
-    }
-    
-    SALES_FACT {
-        INTEGER sale_id PK
-        INT property_id FK
-        INT agent_id FK
-        INT buyer_id FK
-        INT date_id FK
-        REAL sale_price
-        REAL commission
-        INT properties_sold
-    }
-
-    AGENT_DIM ||--o{ SALES_FACT: "refers to"
-    PROPERTY_DIM ||--o{ SALES_FACT: "refers to"
-    BUYER_DIM ||--o{ SALES_FACT: "refers to"
-    DATE_DIM ||--o{ SALES_FACT: "refers to"
-```
----
-
-## 3. **Step-by-Step Design of the Real Estate Star Schema**
-
-### 3.1. **Identify the Business Process**
+### 2.1. **Identify the Business Process**
 
 The first step is to determine the business process or event you want to analyze. In this case, the focus is on **property sales transactions**.
 
 - **Business Question**: “What is the total sales value and the number of properties sold by each agent per month?”  
 We will track property sales and relevant details like the agent involved, the buyer, property characteristics, and the sale date.
 
-### 3.2. **Identify the Facts**
+### 2.2. **Identify the Facts**
 
 The **fact table** will hold metrics related to the sales transactions. For a real estate business, these might include:
 
@@ -91,7 +34,7 @@ The **fact table** will hold metrics related to the sales transactions. For a re
 - `Commission`
 - `Number of Properties Sold`
 
-### 3.3. **Identify the Dimensions**
+### 2.3. **Identify the Dimensions**
 
 The **dimension tables** will provide context for the fact data. Common dimensions in real estate include:
 
@@ -102,9 +45,9 @@ The **dimension tables** will provide context for the fact data. Common dimensio
 
 ---
 
-## 4. **Creating the Real Estate Star Schema in SQL**
+## 3. **Creating the Real Estate Star Schema in SQL**
 
-### 4.1. **Create the Fact Table**
+### 3.1. **Create the Fact Table**
 
 The **sales_fact** table will store data on each sale, including foreign keys referencing the dimensions.
 
@@ -125,7 +68,7 @@ CREATE TABLE sales_fact (
 );
 ```
 
-### 4.2. **Create the Dimension Tables**
+### 3.2. **Create the Dimension Tables**
 
 #### **Agent Dimension**
 
@@ -186,97 +129,58 @@ CREATE TABLE date_dim (
 );
 ```
 
----
+## 4. ** Real Estate Star Schema Diagram**
 
-### 4.3. **Populate the Tables with Sample Data**
+```mermaid
+erDiagram
+    AGENT_DIM {
+        INTEGER agent_id PK
+        VARCHAR agent_name
+        VARCHAR agency_name
+        VARCHAR contact_info
+        VARCHAR region
+    }
+    
+    PROPERTY_DIM {
+        INTEGER property_id PK
+        VARCHAR property_type
+        INT property_size
+        VARCHAR city
+        VARCHAR state
+        VARCHAR zip_code
+        REAL price
+    }
+    
+    BUYER_DIM {
+        INTEGER buyer_id PK
+        VARCHAR buyer_name
+        VARCHAR contact_info
+        REAL buyer_income
+        VARCHAR preferred_region
+    }
+    
+    DATE_DIM {
+        INTEGER date_id PK
+        DATE sale_date
+        VARCHAR day_of_week
+        VARCHAR month
+        INT year
+        INT quarter
+    }
+    
+    SALES_FACT {
+        INTEGER sale_id PK
+        INT property_id FK
+        INT agent_id FK
+        INT buyer_id FK
+        INT date_id FK
+        REAL sale_price
+        REAL commission
+        INT properties_sold
+    }
 
-Once your tables are defined, you’ll need to insert data. Below are some sample SQL scripts for populating the dimension tables.
-
-#### **Insert Sample Data into Agent Dimension**
-
-```sql
-INSERT INTO agent_dim (agent_id, agent_name, agency_name, contact_info, region)
-VALUES
-(1, 'Alice Johnson', 'Top Realty', 'alice@toprealty.com', 'North Region'),
-(2, 'Bob Smith', 'Premier Properties', 'bob@premier.com', 'South Region');
+    AGENT_DIM ||--o{ SALES_FACT: "refers to"
+    PROPERTY_DIM ||--o{ SALES_FACT: "refers to"
+    BUYER_DIM ||--o{ SALES_FACT: "refers to"
+    DATE_DIM ||--o{ SALES_FACT: "refers to"
 ```
-
-#### **Insert Sample Data into Property Dimension**
-
-```sql
-INSERT INTO property_dim (property_id, property_type, property_size, city, state, zip_code, price)
-VALUES
-(1, 'Apartment', 1200, 'Los Angeles', 'CA', '90001', 500000),
-(2, 'Single-family Home', 2000, 'Miami', 'FL', '33101', 750000);
-```
-
-#### **Insert Sample Data into Buyer Dimension**
-
-```sql
-INSERT INTO buyer_dim (buyer_id, buyer_name, contact_info, buyer_income, preferred_region)
-VALUES
-(1, 'John Doe', 'john@example.com', 120000, 'West Coast'),
-(2, 'Jane Smith', 'jane@example.com', 150000, 'East Coast');
-```
-
-#### **Insert Sample Data into Date Dimension**
-
-```sql
-INSERT INTO date_dim (date_id, sale_date, day_of_week, month, year, quarter)
-VALUES
-(1, '2024-03-15', 'Friday', 'March', 2024, 1),
-(2, '2024-03-16', 'Saturday', 'March', 2024, 1);
-```
-
-#### **Insert Sample Data into Sales Fact Table**
-
-```sql
-INSERT INTO sales_fact (sale_id, property_id, agent_id, buyer_id, date_id, sale_price, commission, properties_sold)
-VALUES
-(1, 1, 1, 1, 1, 500000, 25000, 1),
-(2, 2, 2, 2, 2, 750000, 37500, 1);
-```
-
----
-
-## 5. **Querying the Real Estate Star Schema**
-
-Once your star schema is populated with data, you can run queries to analyze it. Below is an example query to retrieve total sales revenue and the number of properties sold by each agent for a given time period.
-
-### Example Query: Total Sales and Properties Sold by Agent
-
-```sql
-SELECT
-    a.agent_name,
-    COUNT(f.sale_id) AS properties_sold,
-    SUM(f.sale_price) AS total_sales,
-    SUM(f.commission) AS total_commission
-FROM
-    sales_fact f
-JOIN
-    agent_dim a ON f.agent_id = a.agent_id
-JOIN
-    date_dim d ON f.date_id = d.date_id
-WHERE
-    d.year = 2024
-GROUP BY
-    a.agent_name;
-```
-
-### Explanation:
-
-- **`JOIN`**: We join the fact table with the agent and date dimension tables to filter sales by agent and year.
-- **`COUNT`**: Calculates the number of properties sold by each agent.
-- **`SUM`**: Aggregates the total sales value and total commissions for each agent.
-
----
-
-## 6. **Best Practices for Building a Star Schema**
-
-### 6.1. **Normalize Dimensions Where Appropriate**
-
-Although star schemas are typically denormalized for faster querying, consider normalizing large or frequently changing dimension tables (like property or agent details) to reduce redundancy.
-
-### 6.2. **Partition Large Fact Tables**
-
-If your sales data grows significantly over time, consider partitioning the **fact table** by time (such as by year or quarter) to improve query performance.
