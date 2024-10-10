@@ -20,6 +20,7 @@ For a real estate business, this schema will allow you to track which agents sol
 ## 2. **Star Schema Diagram**
 
 ```mermaid
+erDiagram
     AGENT_DIM {
         INTEGER agent_id PK
         VARCHAR agent_name
@@ -71,7 +72,6 @@ For a real estate business, this schema will allow you to track which agents sol
     BUYER_DIM ||--o{ SALES_FACT: "refers to"
     DATE_DIM ||--o{ SALES_FACT: "refers to"
 ```
-
 ---
 
 ## 3. **Step-by-Step Design of the Real Estate Star Schema**
