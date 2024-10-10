@@ -129,7 +129,7 @@ CREATE TABLE date_dim (
 );
 ```
 
-## 4. ** Real Estate Star Schema Diagram**
+## 4. **Real Estate Star Schema Diagram**
 
 ```mermaid
 erDiagram
