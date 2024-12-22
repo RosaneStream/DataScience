@@ -25,14 +25,9 @@ O projeto consiste na criação das seguintes tabelas:
 
 ### 1. Configuração Inicial
 
-Importar a tabela **Financial Sample** para o Power BI. Duplicar a tabela importada e renomeá-la para **financials_source** e definir ambas como ocultas, para evitar alterações diretas.
+Importar a tabela **Financial Sample** para o Power BI, renomear para **financials_source** e definir como oculta, para evitar alterações diretas.
 
-### 2. Atualizar a tabela financials_source
-
-Adicionar uma nova coluna de índice em **financials_source** usando a funcionalidade Adicionar Coluna -> Coluna de Índice.
-Essa tabela será utilizada como base para duplicação e criação das tabelas **f_sale** e **d_detail**.
-
-### 3. Criação das Tabelas Dimensão
+### 2. Criação das Tabelas Dimensão
 
 #### a) **d_product**
 
@@ -69,8 +64,8 @@ Atualizar a tabela **financials_source**, criando a coluna Product_ID, usando a 
 
 #### e) Incluir Category_ID na tabela origem
 
-Atualizar a tabela **financials_source**, criando a coluna Category_ID com os 3 primeiros dígitos dos campos Segment e Count, usando Coluna Personalizada, inserindo a função DAX:
-   - Text.Start([Segment],3) & Text.Start([Country],3)
+Atualizar a tabela **financials_source**, criando a coluna Category_ID com os 3 primeiros dígitos dos campos Segment e Country, usando Coluna Personalizada inserir a função DAX:
+   - Category_ID = Text.Start([Segment],3) & Text.Start([Country],3)
 
 #### f) **d_category**
 
@@ -85,10 +80,14 @@ Criar uma tabela de calendário com a função DAX:
 ```DAX
 d_calendar = CALENDAR(MIN(financials_source[Date]), MAX(financials_source[Date]))
 ```
+ 
+### 3. Criação da Tabela Fato (**f_sale**)
 
-### 4. Criação da Tabela Fato (**f_sale**)
+1. Incluir SK_ID na tabela origem
 
-1. Duplicar a tabela **financials_source** e renomear para **f_sale**, e manter as colunas:
+Atualizar a tabela **financials_source**, criando a coluna SK_ID, usando a opção Adicionar Coluna -> Coluna de Índice.
+
+2. Duplicar a tabela **financials_source**, renomear para **f_sale**, e manter as colunas:
    - `SK_ID`
    - `Product_ID`
    - `Category_ID`
@@ -96,18 +95,18 @@ d_calendar = CALENDAR(MIN(financials_source[Date]), MAX(financials_source[Date])
    - `Sales Price`
    - `Date`
 
-### 5. Criação da Dimensão Detalhes da Tabela Fato
+### 4. Criação da Dimensão Detalhes da Tabela Fato
 
 #### **d_detail**
 
-Duplicar a tabela **financials_source** e criar uma tabela para armazenar informações adicionais de vendas não contempladas nas demais tabelas:
+Duplicar a tabela **financials_source**, renomear para **d_detail**, e manter as colunas:
    - `SK_ID`
    - `Gross Sales`
    - `Sales`
    - `COGS`
    - `Profit`
 
-### 6. Modelagem do Diagrama
+### 5. Modelagem do Diagrama
 
 1. Reorganizar as tabelas no modelo de dados para formar o esquema estrela:
    - A tabela **f_sale** no centro.
@@ -126,28 +125,9 @@ Duplicar a tabela **financials_source** e criar uma tabela para armazenar inform
 
 ---
 
-## Salvar e Documentar o Projeto
-
-1. Salvar o arquivo **.pbix**.
-2. Exportar uma imagem do diagrama de esquema em estrela.
-3. Subir o projeto para um repositório no GitHub com o README.md explicativo.
-
----
-
-## Exemplo de Repositório
-
-Inclua neste repositório:
-- Arquivo **.pbix**.
-- Imagem do esquema em estrela.
-- Este README.md detalhado.
-
-Com isso, temos a solução do desafio pronta para compartilhar com a comunidade.
-
----
-
 ## Modelo de Esquema Estrela
 
-Abaixo está o diagrama do esquema estrela criado no Power BI:
+Diagrama do esquema estrela criado no Power BI:
 
 ```mermaid
 graph TD
@@ -165,3 +145,13 @@ graph TD
     d_category["d_category"]
     d_calendar["d_calendar"]
 ```
+## Salvar e Documentar o Projeto
+
+Inclua neste repositório:
+- Arquivo **.pbix**.
+- Imagem do esquema em estrela.
+- Este README.md detalhado.
+
+Com isso, temos compartilhada a solução do desafio descrito.
+
+---
